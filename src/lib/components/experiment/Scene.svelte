@@ -2,12 +2,17 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
 	import * as THREE from 'three';
+	import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+	import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+	import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+	import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 	import gsap from 'gsap';
 	import { HeroObject } from './HeroObject';
 	import { ExperienceManager } from './ExperienceManager';
 
 	let canvas: HTMLCanvasElement;
 	let renderer: THREE.WebGLRenderer;
+	let composer: EffectComposer;
 	let scene: THREE.Scene;
 	let camera: THREE.PerspectiveCamera;
 	let hero: HeroObject;
@@ -17,20 +22,38 @@
 		// Renderer
 		renderer = new THREE.WebGLRenderer({
 			canvas,
-			antialias: true,
-			alpha: true, // Allow background color to show through if needed
-			powerPreference: 'high-performance'
+			antialias: false, // Antialias performed by post-processing mostly, but can keep false for performance with Bloom
+			alpha: true,
+			powerPreference: 'high-performance',
+			stencil: false
 		});
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(window.innerWidth, window.innerHeight);
-		// renderer.setClearColor(0x000000, 1); // Let CSS handle background or use clear color
+		// renderer.setClearColor(0x000000, 1);
 
 		// Scene
 		scene = new THREE.Scene();
 
 		// Camera
 		camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-		camera.position.z = 3.5; // Slightly further back for the larger object
+		camera.position.z = 3.5;
+
+		// Post Processing
+		composer = new EffectComposer(renderer);
+
+		const renderPass = new RenderPass(scene, camera);
+		composer.addPass(renderPass);
+
+		const bloomPass = new UnrealBloomPass(
+			new THREE.Vector2(window.innerWidth, window.innerHeight),
+			0.5, // Strength (Subtle)
+			0.4, // Radius
+			0.2 // Threshold (Only bright spots)
+		);
+		composer.addPass(bloomPass);
+
+		const outputPass = new OutputPass();
+		composer.addPass(outputPass);
 
 		// Objects
 		hero = new HeroObject();
@@ -60,11 +83,14 @@
 	};
 
 	const onResize = () => {
-		if (!camera || !renderer) return;
+		if (!camera || !renderer || !composer) return;
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
+
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+		composer.setSize(window.innerWidth, window.innerHeight);
 
 		if (hero) hero.onResize(window.innerWidth, window.innerHeight);
 	};
@@ -96,7 +122,7 @@
 
 		if (hero) hero.update(elapsedTime);
 
-		renderer.render(scene, camera);
+		composer.render();
 		frameId = requestAnimationFrame(tick);
 	};
 

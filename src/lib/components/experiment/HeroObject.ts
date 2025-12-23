@@ -278,7 +278,7 @@ void main() {
     
     // Combine
     vec3 finalColor = color;
-    finalColor += fresnel * uColorC * (1.0 - uRoughness); // Glowing edges
+    finalColor += fresnel * uColorC * (1.0 - uRoughness) * 2.5; // Glowing edges (Multiplied for Bloom)
     finalColor += spec * 0.2;
 
     // 3. Post-Process / Tone
