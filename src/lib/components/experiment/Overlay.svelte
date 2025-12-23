@@ -225,24 +225,48 @@
 		{/key}
 	</div>
 
-	<!-- Scroll Prompt (only active at start) -->
-	{#if experienceState.section === 0 && experienceState.scrollProgress < 0.1 && !experienceState.isAutoScrolling}
-		<div
-			in:fade
-			out:fade
-			class="absolute bottom-12 flex flex-col items-center gap-4 text-center opacity-70 mix-blend-difference"
+	<!-- Play Interaction -->
+	<div
+		class="pointer-events-auto fixed bottom-12 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center gap-4 mix-blend-difference"
+	>
+		<!-- Play / Pause Button -->
+		<button
+			onclick={(e) => {
+				e.stopPropagation();
+				AudioManager.getInstance().initialize();
+				experienceState.isAutoScrolling = !experienceState.isAutoScrolling;
+			}}
+			class="group relative flex h-16 w-16 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/10 active:scale-95"
 		>
-			<div class="flex flex-col items-center gap-1">
-				<span class="text-[10px] tracking-[0.3em] uppercase">Klik Untuk Memulai Auto-Play</span>
-				<span class="text-[8px] tracking-[0.2em] uppercase opacity-60"
-					>( Disarankan Menggunakan Headphone )</span
-				>
-			</div>
-			<div class="h-12 w-[1px] animate-pulse bg-gradient-to-b from-transparent to-white"></div>
-		</div>
-	{/if}
+			<div
+				class="absolute inset-0 rounded-full border border-white/10 opacity-0 transition-opacity duration-1000 group-hover:animate-ping group-hover:opacity-40"
+			></div>
+			{#if experienceState.isAutoScrolling}
+				<!-- Pause Icon -->
+				<div class="flex gap-1">
+					<div class="h-4 w-1 bg-white"></div>
+					<div class="h-4 w-1 bg-white"></div>
+				</div>
+			{:else}
+				<!-- Play Icon -->
+				<div
+					class="ml-1 h-0 w-0 border-y-[8px] border-l-[12px] border-y-transparent border-l-white"
+				></div>
+			{/if}
+		</button>
 
-	<!-- Active Indicator & Speed Control -->
+		<!-- Dynamic Label -->
+		<div class="flex flex-col items-center gap-1 text-center font-mono opacity-80">
+			{#if !experienceState.isAutoScrolling && experienceState.section === 0 && experienceState.scrollProgress < 0.05}
+				<span class="animate-pulse text-[10px] tracking-[0.3em] uppercase">Mulai Perjalanan</span>
+			{:else}
+				<span class="text-[9px] tracking-[0.2em] uppercase opacity-50"
+					>{experienceState.isAutoScrolling ? 'AUTO PILOT ON' : 'PAUSED'}</span
+				>
+			{/if}
+		</div>
+	</div>
+	<!-- Speed Control (Top Right) -->
 	{#if experienceState.isAutoScrolling}
 		<div
 			in:fade

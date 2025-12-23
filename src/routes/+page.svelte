@@ -12,49 +12,47 @@
 		Scene = module.default;
 	});
 
-	async function startExperience(e: MouseEvent) {
-		// Ignore clicks on Tweakpane or buttons (if they bubbled up)
-		const target = e.target as HTMLElement;
-		if (target.closest('button') || target.closest('.tp-dfwv')) return;
-
+	// Audio State Management
+	function ensureAudioInitialized() {
 		if (!audioStarted) {
-			// First Interaction: Initialize and Start
-			await AudioManager.getInstance().initialize();
+			AudioManager.getInstance().initialize();
 			audioStarted = true;
-			startAutoScroll();
-			return;
-		}
-
-		// Subsequent clicks stop auto-scroll (User taking control)
-		if (experienceState.isAutoScrolling) {
-			stopAutoScroll();
 		}
 	}
 
 	let autoScrollFrame: number | null = null;
 	let scrollAccumulator = 0;
 
-	function startAutoScroll() {
+	// Reactive Auto-Scroll Engine
+	$effect(() => {
+		if (experienceState.isAutoScrolling) {
+			ensureAudioInitialized();
+			startLoop();
+		} else {
+			stopLoop();
+		}
+	});
+
+	function startLoop() {
 		if (autoScrollFrame) cancelAnimationFrame(autoScrollFrame);
-		experienceState.isAutoScrolling = true;
 
 		const loop = () => {
+			// Check state inside loop to be safe, though effect handles start/stop
 			if (!experienceState.isAutoScrolling) return;
 
 			// Base speed: 0.5px per frame @ 60fps ~= 30px/sec
-			// Multiplier: 1x -> 0.5px, 2x -> 1.0px, 4x -> 2.0px
 			const baseSpeed = 0.5;
 			scrollAccumulator += baseSpeed * experienceState.autoPlaySpeed;
 
 			if (scrollAccumulator >= 1) {
 				const pixelsToScroll = Math.floor(scrollAccumulator);
-				window.scrollBy({ top: pixelsToScroll, behavior: 'instant' }); // instant prevents smooth-scroll fighting
+				window.scrollBy({ top: pixelsToScroll, behavior: 'instant' });
 				scrollAccumulator -= pixelsToScroll;
 			}
 
-			// Safety stop
+			// Safety stop at bottom
 			if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
-				stopAutoScroll();
+				experienceState.isAutoScrolling = false; // This triggers the effect to stop
 				return;
 			}
 
@@ -64,10 +62,16 @@
 		autoScrollFrame = requestAnimationFrame(loop);
 	}
 
-	function stopAutoScroll() {
+	function stopLoop() {
 		if (autoScrollFrame) {
 			cancelAnimationFrame(autoScrollFrame);
 			autoScrollFrame = null;
+		}
+	}
+
+	// User Interruptions
+	function handleUserInterruption() {
+		if (experienceState.isAutoScrolling) {
 			experienceState.isAutoScrolling = false;
 		}
 	}
@@ -87,10 +91,9 @@
 </script>
 
 <svelte:window
-	onclick={startExperience}
-	onwheel={stopAutoScroll}
-	ontouchmove={stopAutoScroll}
-	onkeydown={stopAutoScroll}
+	onwheel={handleUserInterruption}
+	ontouchmove={handleUserInterruption}
+	onkeydown={handleUserInterruption}
 />
 
 <svelte:head>
