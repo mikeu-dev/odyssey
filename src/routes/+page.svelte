@@ -82,6 +82,14 @@
 	<section class="h-screen w-full"></section>
 	<section class="h-screen w-full"></section>
 	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
+	<section class="h-screen w-full"></section>
 </main>
 
 <style>

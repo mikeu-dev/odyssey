@@ -13,25 +13,49 @@
 	// Narrative Sections (Bahasa Indonesia)
 	// Cinematic, poetic, and immersive.
 	const narrativeChapters = [
+		// ERA: GENESIS
 		{
 			title: 'KEHENINGAN',
 			subtitle: 'Di dalam ketiadaan, sebuah nafas berhembus perlahan.',
-			id: 'genesis'
+			id: 'genesis_1'
 		},
+		{
+			title: 'AWAL MULA',
+			subtitle: 'Partikel cahaya mulai menari, mencari bentuk dalam kehampaan.',
+			id: 'genesis_2'
+		},
+		// ERA: ENERGY
 		{
 			title: 'ALIRAN',
 			subtitle: 'Energi mulai berkumpul, membentuk sebuah tujuan yang abadi.',
-			id: 'energy'
+			id: 'energy_1'
 		},
+		{
+			title: 'GELOMBANG',
+			subtitle: 'Getaran kesadaran menyebar, membangunkan ruang dan waktu.',
+			id: 'energy_2'
+		},
+		// ERA: CHAOS
 		{
 			title: 'GEJOLAK',
 			subtitle: 'Struktur retak. Ketidakpastian mengambil alih realitas.',
-			id: 'chaos'
+			id: 'chaos_1'
 		},
+		{
+			title: 'FRAGMENTASI',
+			subtitle: 'Pecahan-pecahan bertabrakan, melahirkan keindahan yang liar.',
+			id: 'chaos_2'
+		},
+		// ERA: HARMONY
 		{
 			title: 'HARMONI',
 			subtitle: 'Dari kekacauan, lahirlah bentuk baru yang sempurna.',
-			id: 'harmony'
+			id: 'harmony_1'
+		},
+		{
+			title: 'KESEIMBANGAN',
+			subtitle: 'Abadi. Sebuah dunia baru telah tercipta dalam kedamaian.',
+			id: 'harmony_2'
 		}
 	];
 </script>
@@ -71,7 +95,7 @@
 			>
 				<!-- Chapter Number (Roman Numerals for grandeur) -->
 				<div class="font-serif text-sm tracking-[0.3em] italic opacity-60">
-					BAB {['I', 'II', 'III', 'IV'][experienceState.section]}
+					BAB {['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'][experienceState.section]}
 				</div>
 
 				<!-- Main Title - Cinematic Typography -->
