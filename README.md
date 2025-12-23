@@ -13,8 +13,8 @@
 - **Generative Audio**: Sistem audio ambien (Tone.js) yang bereaksi dan berubah secara dinamis di setiap bab.
 - **Reactive State**: Dibangun di atas **Svelte 5 Runes** untuk manajemen state yang ultra-responsif.
 - **High Performance**: Optimasi lazy-loading, post-processing (Bloom) efisien, dan PWA-ready.
-- **Cinematic Experience**: Tipografi elegan, animasi halus (GSAP), dan kontras adaptif.
-- **Fully Responsive**: Berjalan mulus di desktop dan mobile.
+- **Cinematic Experience**: Auto-Play ("REC") mode dengan kontrol kecepatan variabel (0.5x - 16x), tipografi elegan, dan animasi halus.
+- **Fully Responsive**: Berjalan mulus di desktop dan mobile dengan kontrol sentuh adaptif.
 
 ## 🛠️ Stack Teknologi
 
@@ -26,6 +26,7 @@ Proyek ini dibangun dengan standar teknologi web terkini:
 - **Animation**: [GSAP](https://greensock.com/gsap/)
 - **Audio**: [Tone.js](https://tonejs.github.io/)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Monitoring**: [Vercel Speed Insights](https://vercel.com/docs/speed-insights)
 - **Languages**: TypeScript
 
 ## 🚀 Cara Menjalankan
@@ -52,6 +53,13 @@ Pastikan Anda memiliki Node.js (v18+) terinstal.
     ```bash
     npm run build
     ```
+
+## 🎮 Interaksi
+- **Play / Pause**: Tombol tengah di bagian bawah untuk memulai atau menghentikan perjalanan otomatis.
+- **Scroll Manual**: Ambil alih kendali kapan saja dengan scroll mouse atau sentuhan.
+- **Kecepatan**: Atur tempo perjalanan dari **0.5x** (Meditatif) hingga **16x** (Hyper Drive) melalui panel kontrol kanan atas.
+- **Audio**: Toggle Mute/Unmute di pojok kiri bawah.
+- **Creative Controls**: Panel *Tweakpane* tersembunyi untuk memanipulasi parameter visual secara langsung.
 
 ## 🎨 Struktur Narasi
 
