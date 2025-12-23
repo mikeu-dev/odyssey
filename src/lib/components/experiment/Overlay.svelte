@@ -260,7 +260,10 @@
 			<div class="flex gap-2">
 				{#each [0.5, 1.0, 2.0, 4.0] as speed}
 					<button
-						onclick={() => (experienceState.autoPlaySpeed = speed)}
+						onclick={(e) => {
+							e.stopPropagation();
+							experienceState.autoPlaySpeed = speed;
+						}}
 						class="rounded border border-white/20 px-1.5 py-0.5 font-mono text-[9px] transition-colors hover:bg-white hover:text-black {experienceState.autoPlaySpeed ===
 						speed
 							? 'bg-white text-black'
@@ -275,7 +278,10 @@
 
 	<!-- Audio Control -->
 	<button
-		onclick={toggleAudio}
+		onclick={(e) => {
+			e.stopPropagation();
+			toggleAudio();
+		}}
 		class="pointer-events-auto absolute bottom-8 left-8 z-50 flex items-center gap-2 font-mono text-[10px] tracking-widest text-white uppercase opacity-50 mix-blend-difference transition-opacity hover:cursor-pointer hover:opacity-100"
 	>
 		<span>{isMuted ? 'UNMUTE' : 'MUTE'}</span>

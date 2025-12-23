@@ -12,7 +12,11 @@
 		Scene = module.default;
 	});
 
-	async function startExperience() {
+	async function startExperience(e: MouseEvent) {
+		// Ignore clicks on Tweakpane or buttons (if they bubbled up)
+		const target = e.target as HTMLElement;
+		if (target.closest('button') || target.closest('.tp-dfwv')) return;
+
 		if (!audioStarted) {
 			// First Interaction: Initialize and Start
 			await AudioManager.getInstance().initialize();
