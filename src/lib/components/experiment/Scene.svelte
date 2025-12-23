@@ -4,6 +4,7 @@
 	import * as THREE from 'three';
 	import gsap from 'gsap';
 	import { HeroObject } from './HeroObject';
+	import { ExperienceManager } from './ExperienceManager';
 
 	let canvas: HTMLCanvasElement;
 	let renderer: THREE.WebGLRenderer;
@@ -17,19 +18,19 @@
 		renderer = new THREE.WebGLRenderer({
 			canvas,
 			antialias: true,
-			alpha: true,
+			alpha: true, // Allow background color to show through if needed
 			powerPreference: 'high-performance'
 		});
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(window.innerWidth, window.innerHeight);
-		renderer.setClearColor(0x000000, 1);
+		// renderer.setClearColor(0x000000, 1); // Let CSS handle background or use clear color
 
 		// Scene
 		scene = new THREE.Scene();
 
 		// Camera
 		camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-		camera.position.z = 2;
+		camera.position.z = 3.5; // Slightly further back for the larger object
 
 		// Objects
 		hero = new HeroObject();
@@ -41,23 +42,18 @@
 			x: 1,
 			y: 1,
 			z: 1,
-			duration: 2,
+			duration: 2.5,
 			ease: 'elastic.out(1, 0.5)',
 			delay: 0.1
 		});
-
-		// Lights (Minimal setup, relying mostly on shader emissions/matcaps/fresnel)
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-		scene.add(ambientLight);
-
-		const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-		dirLight.position.set(5, 5, 5);
-		scene.add(dirLight);
 
 		// Events
 		window.addEventListener('resize', onResize);
 		window.addEventListener('mousemove', onMouseMove);
 		window.addEventListener('scroll', onScroll);
+
+		// Initial Scroll Check
+		onScroll();
 
 		// Start Loop
 		tick();
@@ -78,7 +74,11 @@
 	};
 
 	const onScroll = () => {
-		if (hero) hero.onScroll(window.scrollY);
+		const scrollY = window.scrollY;
+		const maxScroll = document.body.scrollHeight - window.innerHeight;
+		const progress = Math.max(0, Math.min(1, scrollY / maxScroll));
+
+		ExperienceManager.getInstance().onScroll(progress);
 	};
 
 	const tick = (time: number = 0) => {
@@ -109,4 +109,7 @@
 	});
 </script>
 
-<canvas bind:this={canvas} class="absolute top-0 left-0 block h-full w-full outline-none"></canvas>
+<canvas
+	bind:this={canvas}
+	class="fixed top-0 left-0 -z-10 block h-full w-full bg-neutral-900 outline-none"
+></canvas>
