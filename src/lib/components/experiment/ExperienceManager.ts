@@ -14,7 +14,7 @@ export class ExperienceManager {
         // Initialize Tweakpane
         if (typeof window !== 'undefined') {
             import('tweakpane').then(({ Pane }) => {
-                const pane = new Pane({ title: 'Creative Controls' });
+                const pane = new Pane({ title: 'Creative Controls' }) as any;
                 const f1 = pane.addFolder({ title: 'Params' });
                 f1.addBinding(experienceState.params, 'chaosLevel', { min: 0, max: 2 });
                 f1.addBinding(experienceState.params, 'flowSpeed', { min: 0, max: 5 });
