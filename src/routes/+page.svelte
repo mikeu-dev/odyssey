@@ -1,13 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Overlay from '$lib/components/experiment/Overlay.svelte';
+	import { AudioManager } from '$lib/components/experiment/AudioManager';
 
 	let Scene: any = $state(null);
+	let audioStarted = $state(false);
 
 	onMount(async () => {
 		const module = await import('$lib/components/experiment/Scene.svelte');
 		Scene = module.default;
 	});
+
+	async function startExperience() {
+		if (audioStarted) return;
+		await AudioManager.getInstance().initialize();
+		audioStarted = true;
+	}
 
 	const schema = JSON.stringify({
 		'@context': 'https://schema.org',
@@ -22,6 +30,8 @@
 		url: 'https://my-world.dev'
 	});
 </script>
+
+<svelte:window onclick={startExperience} onscroll={startExperience} />
 
 <svelte:head>
 	<title>Living | Creative Coding Experiment</title>

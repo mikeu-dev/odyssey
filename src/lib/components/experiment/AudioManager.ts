@@ -23,7 +23,7 @@ export class AudioManager {
             oscillator: { type: "sine" },
             envelope: { attack: 1, decay: 0.5, sustain: 0.5, release: 2 }
         }).connect(this.filter);
-        this.polySynth.volume.value = -12;
+        this.polySynth.volume.value = -6;
     }
 
     public static getInstance(): AudioManager {
