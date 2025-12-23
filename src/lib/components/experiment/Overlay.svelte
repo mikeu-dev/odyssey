@@ -282,7 +282,7 @@
 
 			<!-- Speed Controls -->
 			<div class="flex gap-2">
-				{#each [0.5, 1.0, 2.0, 4.0] as speed}
+				{#each [0.5, 1.0, 2.0, 4.0, 8.0, 16.0] as speed}
 					<button
 						onclick={(e) => {
 							e.stopPropagation();
