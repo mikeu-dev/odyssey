@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { currentMode, currentSection, scrollProgress } from './stores';
+	import { experienceState } from './state.svelte';
 	import { fade, fly } from 'svelte/transition';
-	import { onMount } from 'svelte';
 
 	// Narrative Sections (Bahasa Indonesia)
 	// Cinematic, poetic, and immersive.
@@ -46,7 +45,7 @@
 			{#each narrativeChapters as chapter, i}
 				<div
 					class="h-1 rounded-full transition-all duration-700 ease-out"
-					style="width: {$currentSection === i ? '32px' : '8px'}; background-color: white;"
+					style="width: {experienceState.section === i ? '32px' : '8px'}; background-color: white;"
 				></div>
 			{/each}
 		</div>
@@ -56,7 +55,7 @@
 	<div
 		class="pointer-events-none relative z-20 flex w-full max-w-4xl items-center justify-center text-center"
 	>
-		{#key $currentSection}
+		{#key experienceState.section}
 			<div
 				in:fly={{ y: 40, duration: 2000, delay: 300, opacity: 0 }}
 				out:fade={{ duration: 1000 }}
@@ -64,7 +63,7 @@
 			>
 				<!-- Chapter Number (Roman Numerals for grandeur) -->
 				<div class="font-serif text-sm tracking-[0.3em] italic opacity-60">
-					BAB {['I', 'II', 'III', 'IV'][$currentSection]}
+					BAB {['I', 'II', 'III', 'IV'][experienceState.section]}
 				</div>
 
 				<!-- Main Title - Cinematic Typography -->
@@ -72,7 +71,7 @@
 				<h1
 					class="bg-gradient-to-b from-white to-white/60 bg-clip-text font-serif text-7xl tracking-widest text-transparent uppercase drop-shadow-2xl md:text-9xl"
 				>
-					{narrativeChapters[$currentSection].title}
+					{narrativeChapters[experienceState.section].title}
 				</h1>
 
 				<!-- Divider -->
@@ -84,14 +83,14 @@
 				<p
 					class="max-w-xl font-sans text-lg leading-relaxed font-light tracking-wide opacity-90 md:text-2xl"
 				>
-					{@html narrativeChapters[$currentSection].subtitle}
+					{@html narrativeChapters[experienceState.section].subtitle}
 				</p>
 			</div>
 		{/key}
 	</div>
 
 	<!-- Scroll Prompt (only active at start) -->
-	{#if $currentSection === 0 && $scrollProgress < 0.1}
+	{#if experienceState.section === 0 && experienceState.scrollProgress < 0.1}
 		<div
 			in:fade
 			out:fade
@@ -106,7 +105,7 @@
 	<div
 		class="absolute right-8 bottom-8 hidden font-mono text-[10px] tracking-widest opacity-30 md:block"
 	>
-		DIMENSI {($scrollProgress * 100).toFixed(0)}%
+		DIMENSI {(experienceState.scrollProgress * 100).toFixed(0)}%
 	</div>
 </div>
 

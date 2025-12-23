@@ -1,23 +1,8 @@
 import gsap from 'gsap';
-import * as THREE from 'three';
-import { currentSection, currentMode, scrollProgress, type ExperienceMode } from './stores';
-import { get } from 'svelte/store';
+import { experienceState, type ExperienceMode } from './state.svelte';
 
 export class ExperienceManager {
     private static instance: ExperienceManager;
-
-    // Target values for shaders/animation
-    public params = {
-        chaosLevel: 0,
-        flowSpeed: 0.5,
-        distortion: 0.1,
-        morph: 0,
-        roughness: 0.4,
-        metalness: 0.1,
-        colorA: new THREE.Color('#0f172a'), // Deep Blue/Slate
-        colorB: new THREE.Color('#334155'), // Muted Blue/Grey
-        colorC: new THREE.Color('#e2e8f0'), // Light Mist
-    };
 
     constructor() {
         if (ExperienceManager.instance) {
@@ -30,16 +15,16 @@ export class ExperienceManager {
             import('tweakpane').then(({ Pane }) => {
                 const pane = new Pane({ title: 'Creative Controls' });
                 const f1 = pane.addFolder({ title: 'Params' });
-                f1.addBinding(this.params, 'chaosLevel', { min: 0, max: 2 });
-                f1.addBinding(this.params, 'flowSpeed', { min: 0, max: 5 });
-                f1.addBinding(this.params, 'distortion', { min: 0, max: 3 });
-                f1.addBinding(this.params, 'morph', { min: 0, max: 1 });
-                f1.addBinding(this.params, 'roughness', { min: 0, max: 1 });
+                f1.addBinding(experienceState.params, 'chaosLevel', { min: 0, max: 2 });
+                f1.addBinding(experienceState.params, 'flowSpeed', { min: 0, max: 5 });
+                f1.addBinding(experienceState.params, 'distortion', { min: 0, max: 3 });
+                f1.addBinding(experienceState.params, 'morph', { min: 0, max: 1 });
+                f1.addBinding(experienceState.params, 'roughness', { min: 0, max: 1 });
 
                 const f2 = pane.addFolder({ title: 'Colors' });
-                f2.addBinding(this.params, 'colorA', { color: { type: 'float' } });
-                f2.addBinding(this.params, 'colorB', { color: { type: 'float' } });
-                f2.addBinding(this.params, 'colorC', { color: { type: 'float' } });
+                f2.addBinding(experienceState.params, 'colorA', { color: { type: 'float' } });
+                f2.addBinding(experienceState.params, 'colorB', { color: { type: 'float' } });
+                f2.addBinding(experienceState.params, 'colorC', { color: { type: 'float' } });
             });
         }
     }
@@ -52,7 +37,7 @@ export class ExperienceManager {
     }
 
     public onScroll(progress: number) {
-        scrollProgress.set(progress);
+        experienceState.scrollProgress = progress;
 
         // Determine section based on scroll (0.0 - 1.0)
         // We have 4 sections, so 0.25 chunks
@@ -73,12 +58,12 @@ export class ExperienceManager {
             mode = 'HARMONY';
         }
 
-        const prevSection = get(currentSection);
+        const prevSection = experienceState.section;
 
-        // Only update store if changed to avoid thrashing
+        // Only update if changed to avoid thrashing
         if (prevSection !== section) {
-            currentSection.set(section);
-            if (get(currentMode) !== mode) currentMode.set(mode);
+            experienceState.section = section;
+            if (experienceState.mode !== mode) experienceState.mode = mode;
 
             // Trigger Transition ONCE
             switch (section) {
@@ -94,7 +79,7 @@ export class ExperienceManager {
 
     private transitionToGenesis() {
         // Keheningan: Void, Mist, Subtle Light
-        gsap.to(this.params, {
+        gsap.to(experienceState.params, {
             chaosLevel: 0,
             flowSpeed: 0.2, // Very slow
             distortion: 0.05, // Almost Sphere
@@ -102,13 +87,13 @@ export class ExperienceManager {
             roughness: 0.6,
             duration: 2.0
         });
-        gsap.to(this.params.colorA, { r: 0.05, g: 0.05, b: 0.1, duration: 2 }); // Deep Void
-        gsap.to(this.params.colorB, { r: 0.1, g: 0.1, b: 0.15, duration: 2 });
+        gsap.to(experienceState.params.colorA, { r: 0.05, g: 0.05, b: 0.1, duration: 2 }); // Deep Void
+        gsap.to(experienceState.params.colorB, { r: 0.1, g: 0.1, b: 0.15, duration: 2 });
     }
 
     private transitionToEnergy() {
         // Aliran: Golden, Flowing, Purposeful
-        gsap.to(this.params, {
+        gsap.to(experienceState.params, {
             chaosLevel: 0.3,
             flowSpeed: 1.5,
             distortion: 0.8, // More movement
@@ -116,13 +101,13 @@ export class ExperienceManager {
             roughness: 0.2,
             duration: 2.0
         });
-        gsap.to(this.params.colorA, { r: 1.0, g: 0.8, b: 0.2, duration: 2 }); // Bright Gold
-        gsap.to(this.params.colorB, { r: 0.6, g: 0.3, b: 0.1, duration: 2 });
+        gsap.to(experienceState.params.colorA, { r: 1.0, g: 0.8, b: 0.2, duration: 2 }); // Bright Gold
+        gsap.to(experienceState.params.colorB, { r: 0.6, g: 0.3, b: 0.1, duration: 2 });
     }
 
     private transitionToChaos() {
         // Gejolak: Crimson, Dark, Fractured
-        gsap.to(this.params, {
+        gsap.to(experienceState.params, {
             chaosLevel: 1.5, // EXTREME CHAOS
             flowSpeed: 4.0, // Very Fast
             distortion: 2.5, // Spiky
@@ -130,13 +115,13 @@ export class ExperienceManager {
             roughness: 1.0, // Rough texture
             duration: 1.5
         });
-        gsap.to(this.params.colorA, { r: 0.8, g: 0.0, b: 0.0, duration: 1.5 }); // Bright Red
-        gsap.to(this.params.colorB, { r: 0.05, g: 0.0, b: 0.0, duration: 1.5 }); // Near Black
+        gsap.to(experienceState.params.colorA, { r: 0.8, g: 0.0, b: 0.0, duration: 1.5 }); // Bright Red
+        gsap.to(experienceState.params.colorB, { r: 0.05, g: 0.0, b: 0.0, duration: 1.5 }); // Near Black
     }
 
     private transitionToHarmony() {
         // Harmoni: Pearl, Iridescent, Calm
-        gsap.to(this.params, {
+        gsap.to(experienceState.params, {
             chaosLevel: 0,
             flowSpeed: 0.3,
             distortion: 0.15, // Gentle waves
@@ -144,7 +129,7 @@ export class ExperienceManager {
             roughness: 0.05, // Mirror-like
             duration: 3.0
         });
-        gsap.to(this.params.colorA, { r: 0.9, g: 0.95, b: 1.0, duration: 3 }); // Pure Pearl
-        gsap.to(this.params.colorB, { r: 0.7, g: 0.7, b: 0.8, duration: 3 }); // Silver
+        gsap.to(experienceState.params.colorA, { r: 0.9, g: 0.95, b: 1.0, duration: 3 }); // Pure Pearl
+        gsap.to(experienceState.params.colorB, { r: 0.7, g: 0.7, b: 0.8, duration: 3 }); // Silver
     }
 }

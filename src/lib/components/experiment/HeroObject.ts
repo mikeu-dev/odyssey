@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { ExperienceManager } from './ExperienceManager';
+import { experienceState } from './state.svelte';
 
 export class HeroObject {
   mesh: THREE.Mesh;
@@ -13,7 +13,7 @@ export class HeroObject {
     // Optimized detail for smooth displacement without dropping frames
     this.geometry = new THREE.IcosahedronGeometry(1.5, 60);
 
-    const params = ExperienceManager.getInstance().params;
+    const params = experienceState.params;
 
     this.uniforms = {
       uTime: { value: 0 },
@@ -53,18 +53,18 @@ export class HeroObject {
   private lastFrameTime = 0;
 
   update(time: number) {
-    const mgr = ExperienceManager.getInstance();
+    const params = experienceState.params;
 
     // Sync Uniforms with Manager Params (which are tweened by GSAP)
-    this.uniforms.uChaosLevel.value = mgr.params.chaosLevel;
-    this.uniforms.uFlowSpeed.value = mgr.params.flowSpeed;
-    this.uniforms.uDistortion.value = mgr.params.distortion;
-    this.uniforms.uMorph.value = mgr.params.morph;
-    this.uniforms.uRoughness.value = mgr.params.roughness;
+    this.uniforms.uChaosLevel.value = params.chaosLevel;
+    this.uniforms.uFlowSpeed.value = params.flowSpeed;
+    this.uniforms.uDistortion.value = params.distortion;
+    this.uniforms.uMorph.value = params.morph;
+    this.uniforms.uRoughness.value = params.roughness;
 
-    this.uniforms.uColorA.value.copy(mgr.params.colorA);
-    this.uniforms.uColorB.value.copy(mgr.params.colorB);
-    this.uniforms.uColorC.value.copy(mgr.params.colorC);
+    this.uniforms.uColorA.value.copy(params.colorA);
+    this.uniforms.uColorB.value.copy(params.colorB);
+    this.uniforms.uColorC.value.copy(params.colorC);
 
     // SMOOTH TIME LOGIC
     // Calculate delta time
@@ -74,15 +74,15 @@ export class HeroObject {
     // Accumulate time based on current flow speed
     // This prevents "jumps" when flowSpeed changes
     if (delta > 0) {
-      this.totalTime += delta * mgr.params.flowSpeed;
+      this.totalTime += delta * params.flowSpeed;
     }
 
     // Pass the ACCUMULATED time to the shader
     this.uniforms.uTime.value = this.totalTime;
 
     // Decrease rotation speed significantly to reduce dizziness
-    this.mesh.rotation.y = this.totalTime * 0.02 * (1 + mgr.params.chaosLevel * 0.5);
-    this.mesh.rotation.z = this.totalTime * 0.01 * (1 + mgr.params.chaosLevel * 0.5);
+    this.mesh.rotation.y = this.totalTime * 0.02 * (1 + params.chaosLevel * 0.5);
+    this.mesh.rotation.z = this.totalTime * 0.01 * (1 + params.chaosLevel * 0.5);
   }
 
   onMouseMove(event: MouseEvent) {
