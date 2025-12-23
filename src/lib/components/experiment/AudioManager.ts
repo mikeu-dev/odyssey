@@ -47,31 +47,45 @@ export class AudioManager {
 
     public updateAmbience() {
         if (!this.isInitialized) return;
+        // This is now mainly a backup or initial trigger
+    }
 
-        const section = experienceState.section;
+    public setChapterMood(chapterIndex: number) {
+        if (!this.isInitialized) return;
 
-        // Stop previous sequences if any
+        const era = Math.floor(chapterIndex / 5);
+        const progressInEra = (chapterIndex % 5) / 4; // 0.0 to 1.0 within Era
+
+        // Base Chaos automation
+        const targetFreq = 200 + (experienceState.params.chaosLevel * 2000);
+        this.filter.frequency.rampTo(targetFreq, 2);
+
+        // ERA SWITCH (Broad changes)
         if (this.seq) {
             this.seq.dispose();
             this.seq = null;
         }
 
-        // Base Filter automation based on chaos
-        const targetFreq = 200 + (experienceState.params.chaosLevel * 2000);
-        this.filter.frequency.rampTo(targetFreq, 2);
-
-        switch (section) {
-            case 0: // GENESIS (Deep, Hening)
+        switch (era) {
+            case 0: // GENESIS
                 this.playGenesis();
+                // Granular: Increase Reverb as we get closer to Awakening
+                this.reverb.wet.rampTo(0.8 - (progressInEra * 0.3), 2); // Dies down slightly
                 break;
-            case 1: // ENERGY (Flowing, Arpeggios)
+            case 1: // ENERGY
                 this.playEnergy();
+                // Granular: Speed up transport? Or just volume
+                this.polySynth.volume.rampTo(-6 + (progressInEra * 3), 2); // Get louder
                 break;
-            case 2: // CHAOS (Dissonant, Random)
+            case 2: // CHAOS
                 this.playChaos();
+                // Granular: Increase distortion feedback
+                this.delay.feedback.value = 0.5 + (progressInEra * 0.4); // 0.5 -> 0.9
                 break;
-            case 3: // HARMONY (Major, Calm)
+            case 3: // HARMONY
                 this.playHarmony();
+                // Granular: Purest sound at the end
+                this.reverb.wet.rampTo(0.5 + (progressInEra * 0.4), 2); // More washing
                 break;
         }
     }

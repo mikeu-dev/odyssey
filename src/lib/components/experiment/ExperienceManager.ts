@@ -37,113 +37,59 @@ export class ExperienceManager {
         return ExperienceManager.instance;
     }
 
+    // Old logic removed in favor of granular config above
+
+    // GRANULAR CHAPTER CONFIGS (20 Unique States)
+    private chapterConfigs = [
+        // GENESIS (0-4): Void -> Awakening
+        { params: { chaosLevel: 0, flowSpeed: 0.1, distortion: 0.05, morph: 0, roughness: 0.6 }, colorA: { r: 0.05, g: 0.05, b: 0.1 }, colorB: { r: 0, g: 0, b: 0 } },
+        { params: { chaosLevel: 0, flowSpeed: 0.2, distortion: 0.1, morph: 0.1, roughness: 0.55 }, colorA: { r: 0.1, g: 0.1, b: 0.2 }, colorB: { r: 0.02, g: 0.02, b: 0.05 } },
+        { params: { chaosLevel: 0.05, flowSpeed: 0.3, distortion: 0.2, morph: 0.15, roughness: 0.5 }, colorA: { r: 0.15, g: 0.15, b: 0.3 }, colorB: { r: 0.05, g: 0.05, b: 0.1 } },
+        { params: { chaosLevel: 0.1, flowSpeed: 0.4, distortion: 0.3, morph: 0.2, roughness: 0.45 }, colorA: { r: 0.2, g: 0.2, b: 0.4 }, colorB: { r: 0.1, g: 0.1, b: 0.2 } },
+        { params: { chaosLevel: 0.15, flowSpeed: 0.5, distortion: 0.4, morph: 0.25, roughness: 0.4 }, colorA: { r: 0.3, g: 0.3, b: 0.5 }, colorB: { r: 0.15, g: 0.15, b: 0.3 } },
+
+        // ENERGY (5-9): Flow -> Surge
+        { params: { chaosLevel: 0.2, flowSpeed: 0.8, distortion: 0.5, morph: 0.3, roughness: 0.35 }, colorA: { r: 0.5, g: 0.4, b: 0.1 }, colorB: { r: 0.2, g: 0.1, b: 0.05 } },
+        { params: { chaosLevel: 0.25, flowSpeed: 1.0, distortion: 0.6, morph: 0.35, roughness: 0.3 }, colorA: { r: 0.7, g: 0.5, b: 0.15 }, colorB: { r: 0.3, g: 0.2, b: 0.1 } },
+        { params: { chaosLevel: 0.3, flowSpeed: 1.2, distortion: 0.7, morph: 0.4, roughness: 0.25 }, colorA: { r: 0.9, g: 0.7, b: 0.2 }, colorB: { r: 0.4, g: 0.25, b: 0.1 } },
+        { params: { chaosLevel: 0.35, flowSpeed: 1.5, distortion: 0.8, morph: 0.45, roughness: 0.2 }, colorA: { r: 1.0, g: 0.8, b: 0.2 }, colorB: { r: 0.5, g: 0.3, b: 0.1 } },
+        { params: { chaosLevel: 0.4, flowSpeed: 2.0, distortion: 0.9, morph: 0.5, roughness: 0.15 }, colorA: { r: 1.0, g: 0.9, b: 0.3 }, colorB: { r: 0.6, g: 0.4, b: 0.15 } },
+
+        // CHAOS (10-14): Tension -> Break
+        { params: { chaosLevel: 0.5, flowSpeed: 2.5, distortion: 1.2, morph: 0.6, roughness: 0.4 }, colorA: { r: 0.8, g: 0.2, b: 0.1 }, colorB: { r: 0.2, g: 0, b: 0 } },
+        { params: { chaosLevel: 0.6, flowSpeed: 3.0, distortion: 1.5, morph: 0.7, roughness: 0.45 }, colorA: { r: 0.7, g: 0.1, b: 0.05 }, colorB: { r: 0.1, g: 0, b: 0 } },
+        { params: { chaosLevel: 0.7, flowSpeed: 3.5, distortion: 1.2, morph: 0.8, roughness: 0.5 }, colorA: { r: 0.6, g: 0, b: 0 }, colorB: { r: 0.05, g: 0, b: 0 } },
+        { params: { chaosLevel: 0.9, flowSpeed: 4.0, distortion: 1.0, morph: 0.9, roughness: 0.55 }, colorA: { r: 0.8, g: 0, b: 0 }, colorB: { r: 0, g: 0, b: 0 } }, // Peak Chaos
+        { params: { chaosLevel: 1.0, flowSpeed: 2.0, distortion: 0.5, morph: 1.0, roughness: 0.6 }, colorA: { r: 0.2, g: 0, b: 0 }, colorB: { r: 0, g: 0, b: 0 } }, // The Void/Silence
+
+        // HARMONY (15-19): Rebirth -> Eternity
+        { params: { chaosLevel: 0.1, flowSpeed: 0.5, distortion: 0.3, morph: 0.2, roughness: 0.1 }, colorA: { r: 0.5, g: 0.6, b: 0.7 }, colorB: { r: 0.2, g: 0.3, b: 0.4 } },
+        { params: { chaosLevel: 0.05, flowSpeed: 0.4, distortion: 0.2, morph: 0.15, roughness: 0.05 }, colorA: { r: 0.7, g: 0.8, b: 0.9 }, colorB: { r: 0.4, g: 0.5, b: 0.6 } },
+        { params: { chaosLevel: 0, flowSpeed: 0.3, distortion: 0.15, morph: 0.1, roughness: 0.02 }, colorA: { r: 0.8, g: 0.9, b: 1.0 }, colorB: { r: 0.6, g: 0.7, b: 0.8 } },
+        { params: { chaosLevel: 0, flowSpeed: 0.2, distortion: 0.1, morph: 0.05, roughness: 0.01 }, colorA: { r: 0.9, g: 0.95, b: 1.0 }, colorB: { r: 0.7, g: 0.75, b: 0.8 } },
+        { params: { chaosLevel: 0, flowSpeed: 0.1, distortion: 0.1, morph: 0, roughness: 0.0 }, colorA: { r: 0.95, g: 0.98, b: 1.0 }, colorB: { r: 0.8, g: 0.8, b: 0.9 } },
+    ];
+
     public onScroll(progress: number) {
         experienceState.scrollProgress = progress;
 
-        // Determine section based on scroll (0.0 - 1.0)
-        // 20 Narrative Chapters (5 per Visual Era)
         const totalSections = 20;
         let section = Math.floor(progress * totalSections);
         if (section >= totalSections) section = totalSections - 1;
 
-        let mode: ExperienceMode = 'GENESIS';
-
-        if (section < 5) {
-            mode = 'GENESIS';
-        } else if (section < 10) {
-            mode = 'ENERGY';
-        } else if (section < 15) {
-            mode = 'CHAOS';
-        } else {
-            mode = 'HARMONY';
-        }
-
-        const prevSection = experienceState.section;
-
-        // Only update if changed to avoid thrashing
-        if (prevSection !== section) {
+        // Update Section State
+        if (experienceState.section !== section) {
             experienceState.section = section;
-            if (experienceState.mode !== mode) experienceState.mode = mode;
-
-            // Trigger Transition ONCE
-            AudioManager.getInstance().updateAmbience();
-
-            switch (section) {
-                case 0:
-                    AudioManager.getInstance().updateAmbience();
-                    this.transitionToGenesis();
-                    break;
-                case 5:
-                    AudioManager.getInstance().updateAmbience();
-                    this.transitionToEnergy();
-                    break;
-                case 10:
-                    AudioManager.getInstance().updateAmbience();
-                    this.transitionToChaos();
-                    break;
-                case 15:
-                    AudioManager.getInstance().updateAmbience();
-                    this.transitionToHarmony();
-                    break;
-            }
+            AudioManager.getInstance().setChapterMood(section);
         }
-    }
 
-    // TRANSITIONS (Using GSAP for smooth interpolation)
-
-    private transitionToGenesis() {
-        // Keheningan: Void, Mist, Subtle Light
-        gsap.to(experienceState.params, {
-            chaosLevel: 0,
-            flowSpeed: 0.2, // Very slow
-            distortion: 0.05, // Almost Sphere
-            morph: 0,
-            roughness: 0.6,
-            duration: 2.0
-        });
-        gsap.to(experienceState.params.colorA, { r: 0.05, g: 0.05, b: 0.1, duration: 2 }); // Deep Void
-        gsap.to(experienceState.params.colorB, { r: 0.1, g: 0.1, b: 0.15, duration: 2 });
-    }
-
-    private transitionToEnergy() {
-        // Aliran: Golden, Flowing, Purposeful
-        gsap.to(experienceState.params, {
-            chaosLevel: 0.3,
-            flowSpeed: 1.5,
-            distortion: 0.8, // More movement
-            morph: 0.4,
-            roughness: 0.2,
-            duration: 2.0
-        });
-        gsap.to(experienceState.params.colorA, { r: 1.0, g: 0.8, b: 0.2, duration: 2 }); // Bright Gold
-        gsap.to(experienceState.params.colorB, { r: 0.6, g: 0.3, b: 0.1, duration: 2 });
-    }
-
-    private transitionToChaos() {
-        // Gejolak: Crimson, Dark, Fractured
-        gsap.to(experienceState.params, {
-            chaosLevel: 1.0, // High but controlled
-            flowSpeed: 3.0, // Fast
-            distortion: 1.0, // Reduced from 2.5 to prevent clipping
-            morph: 1.0,
-            roughness: 0.5, // Reduced from 1.0 so Glow/Fresnel still works!
-            duration: 1.5
-        });
-        gsap.to(experienceState.params.colorA, { r: 0.8, g: 0.0, b: 0.0, duration: 1.5 }); // Bright Red
-        gsap.to(experienceState.params.colorB, { r: 0.05, g: 0.0, b: 0.0, duration: 1.5 }); // Near Black
-    }
-
-    private transitionToHarmony() {
-        // Harmoni: Pearl, Iridescent, Calm
-        gsap.to(experienceState.params, {
-            chaosLevel: 0,
-            flowSpeed: 0.3,
-            distortion: 0.15, // Gentle waves
-            morph: 0.1,
-            roughness: 0.05, // Mirror-like
-            duration: 3.0
-        });
-        gsap.to(experienceState.params.colorA, { r: 0.9, g: 0.95, b: 1.0, duration: 3 }); // Pure Pearl
-        gsap.to(experienceState.params.colorB, { r: 0.7, g: 0.7, b: 0.8, duration: 3 }); // Silver
+        // Apply Visual Config for this specific chapter
+        // We use GSAP to tween to the specific config, enabling continuous evolution
+        const config = this.chapterConfigs[section];
+        if (config) {
+            gsap.to(experienceState.params, { ...config.params, duration: 2.0 });
+            gsap.to(experienceState.params.colorA, { ...config.colorA, duration: 2.0 });
+            gsap.to(experienceState.params.colorB, { ...config.colorB, duration: 2.0 });
+        }
     }
 }
