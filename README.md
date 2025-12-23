@@ -1,38 +1,70 @@
-# sv
+# LIVING | Creative Coding Experiment
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+![Living Experiment](static/og-image.jpg)
 
-## Creating a project
+> *“Di dalam ketiadaan, sebuah nafas berhembus perlahan.”*
 
-If you're seeing this, you've probably already done this step. Congrats!
+**LIVING** adalah sebuah eksperimen visual dan audio interaktif berbasis web yang menggabungkan seni generatif, narasi puitis, dan teknologi web modern. Proyek ini mengajak pengguna menelusuri perjalanan evolusi digital dari ketiadaan menuju harmoni melalui 20 bab naratif yang imersif.
 
-```sh
-# create a new project in the current directory
-npx sv create
+## ✨ Fitur Utama
 
-# create a new project in my-app
-npx sv create my-app
-```
+- **Procedural 3D Visuals**: Organisme digital yang dibuat sepenuhnya dengan kode (Three.js & GLSL Shaders), berevolusi secara real-time.
+- **Epic Scale Narrative**: 20 Bab perjalanan (Genesis, Energy, Chaos, Harmony) dengan deskripsi puitis dalam Bahasa Indonesia.
+- **Generative Audio**: Sistem audio ambien (Tone.js) yang bereaksi dan berubah secara dinamis di setiap bab.
+- **Reactive State**: Dibangun di atas **Svelte 5 Runes** untuk manajemen state yang ultra-responsif.
+- **High Performance**: Optimasi lazy-loading, post-processing (Bloom) efisien, dan PWA-ready.
+- **Cinematic Experience**: Tipografi elegan, animasi halus (GSAP), dan kontras adaptif.
+- **Fully Responsive**: Berjalan mulus di desktop dan mobile.
 
-## Developing
+## 🛠️ Stack Teknologi
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Proyek ini dibangun dengan standar teknologi web terkini:
 
-```sh
-npm run dev
+- **Framework**: [SvelteKit 2](https://kit.svelte.dev/) (Svelte 5)
+- **3D Engine**: [Three.js](https://threejs.org/)
+- **Shaders**: Custom GLSL (Vertex & Fragment)
+- **Animation**: [GSAP](https://greensock.com/gsap/)
+- **Audio**: [Tone.js](https://tonejs.github.io/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Languages**: TypeScript
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## 🚀 Cara Menjalankan
 
-## Building
+Pastikan Anda memiliki Node.js (v18+) terinstal.
 
-To create a production version of your app:
+1.  **Clone Repository**
+    ```bash
+    git clone https://github.com/username/my-world.git
+    cd my-world
+    ```
 
-```sh
-npm run build
-```
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-You can preview the production build with `npm run preview`.
+3.  **Jalankan Development Server**
+    ```bash
+    npm run dev
+    ```
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+4.  **Build untuk Produksi**
+    ```bash
+    npm run build
+    ```
+
+## 🎨 Struktur Narasi
+
+Perjalanan dibagi menjadi 4 Era Utama, masing-masing terdiri dari 5 Bab:
+
+| Era | Tema | Karakteristik Visual | Audio |
+| :--- | :--- | :--- | :--- |
+| **I. GENESIS** | Awal Mula | Gelap, Partikel Halus, Void | Deep Drone, Reverberant |
+| **II. ENERGY** | Pergerakan | Emas, Aliran Cepat, Kompleks | Arpeggios, Rising Tempo |
+| **III. CHAOS** | Konflik | Merah, Distorsi, Glitch, Tajam | Dissonant, High Feedback |
+| **IV. HARMONY** | Resolusi | Mutiara, Halus, Reflektif, Tenang | Major Chord, Pure Wash |
+
+---
+
+**Created with ❤️ by MikeuDev**
+*Digital Art Experiment 2025*
