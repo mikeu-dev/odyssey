@@ -1,15 +1,70 @@
 <script lang="ts">
-	import Scene from '$lib/components/experiment/Scene.svelte';
+	import { onMount } from 'svelte';
 	import Overlay from '$lib/components/experiment/Overlay.svelte';
+
+	let Scene: any = $state(null);
+
+	onMount(async () => {
+		const module = await import('$lib/components/experiment/Scene.svelte');
+		Scene = module.default;
+	});
+
+	const schema = JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'CreativeWork',
+		name: 'Living | Creative Coding Experiment',
+		author: {
+			'@type': 'Person',
+			name: 'My World'
+		},
+		description: 'A procedural WebGL organism that evolves with your interaction.',
+		image: 'https://my-world.dev/og-image.jpg',
+		url: 'https://my-world.dev'
+	});
 </script>
 
 <svelte:head>
 	<title>Living | Creative Coding Experiment</title>
-	<meta name="description" content="A procedural WebGL organism." />
+	<meta
+		name="description"
+		content="A procedural WebGL organism that evolves with your interaction."
+	/>
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://my-world.dev/" />
+	<meta property="og:title" content="Living | Creative Coding Experiment" />
+	<meta
+		property="og:description"
+		content="A procedural WebGL organism that evolves with your interaction."
+	/>
+	<meta property="og:image" content="https://my-world.dev/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:url" content="https://my-world.dev/" />
+	<meta property="twitter:title" content="Living | Creative Coding Experiment" />
+	<meta
+		property="twitter:description"
+		content="A procedural WebGL organism that evolves with your interaction."
+	/>
+	<meta property="twitter:image" content="https://my-world.dev/og-image.jpg" />
+
+	<!-- Schema.org -->
+	{@html `<script type="application/ld+json">${schema}</script>`}
 </svelte:head>
 
 <main class="relative w-full">
-	<Scene />
+	{#if Scene}
+		<Scene />
+	{:else}
+		<div
+			class="fixed inset-0 z-0 flex items-center justify-center bg-[#111] font-serif text-sm tracking-widest text-white/30 uppercase"
+		>
+			Loading Experiment...
+		</div>
+	{/if}
+
 	<Overlay />
 
 	<!-- Scroll Track -->
