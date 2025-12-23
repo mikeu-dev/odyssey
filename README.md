@@ -1,6 +1,6 @@
 # ODYSSEY | Creative Coding Experiment
 
-![Living Experiment](static/og-image.jpg)
+![Living Experiment](static/og-image.jpeg)
 
 > *“Di dalam ketiadaan, sebuah nafas berhembus perlahan.”*
 
