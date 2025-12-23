@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { experienceState } from './state.svelte';
+	import { AudioManager } from '$lib/components/experiment/AudioManager';
 	import { fade, fly } from 'svelte/transition';
+
+	let isMuted = $state(false);
+
+	function toggleAudio() {
+		isMuted = !isMuted;
+		AudioManager.getInstance().toggleMute(isMuted);
+	}
 
 	// Narrative Sections (Bahasa Indonesia)
 	// Cinematic, poetic, and immersive.
@@ -105,6 +113,15 @@
 			<div class="h-12 w-[1px] animate-pulse bg-gradient-to-b from-transparent to-white"></div>
 		</div>
 	{/if}
+
+	<!-- Audio Control -->
+	<button
+		onclick={toggleAudio}
+		class="pointer-events-auto absolute bottom-8 left-8 z-50 flex items-center gap-2 font-mono text-[10px] tracking-widest text-white uppercase opacity-50 mix-blend-difference transition-opacity hover:cursor-pointer hover:opacity-100"
+	>
+		<span>{isMuted ? 'UNMUTE' : 'MUTE'}</span>
+		<div class="h-2 w-2 rounded-full {isMuted ? 'bg-red-500' : 'bg-green-500'}"></div>
+	</button>
 
 	<!-- Persistent ambient footer (optional, keeping minimal) -->
 	<div
