@@ -73,16 +73,26 @@
 		if (hero) hero.onMouseMove(e);
 	};
 
+	// Smooth Scrolling Variables
+	let targetScroll = 0;
+	let currentScroll = 0;
+
 	const onScroll = () => {
 		const scrollY = window.scrollY;
 		const maxScroll = document.body.scrollHeight - window.innerHeight;
-		const progress = Math.max(0, Math.min(1, scrollY / maxScroll));
-
-		ExperienceManager.getInstance().onScroll(progress);
+		// Just update target, don't trigger manager yet
+		targetScroll = Math.max(0, Math.min(1, scrollY / maxScroll));
 	};
 
 	const tick = (time: number = 0) => {
 		const elapsedTime = time * 0.001;
+
+		// Linear Interpolation for Smooth Scroll
+		// 0.05 is the damping factor (lower = smoother/slower)
+		currentScroll += (targetScroll - currentScroll) * 0.05;
+
+		// Update Manager with smooth value
+		ExperienceManager.getInstance().onScroll(currentScroll);
 
 		if (hero) hero.update(elapsedTime);
 

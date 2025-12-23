@@ -115,9 +115,9 @@ export class ExperienceManager {
     private transitionToChaos() {
         // Spiky, fast, glitchy
         gsap.to(this.params, {
-            chaosLevel: 1.0, // Full chaos
-            flowSpeed: 3.0,
-            distortion: 1.2, // Extreme spikes
+            chaosLevel: 0.7, // Reduced from 1.0 for comfort
+            flowSpeed: 2.0, // Reduced from 3.0 for comfort
+            distortion: 1.0,
             morph: 1.0,
             roughness: 0.8, // Matte/Rough
             duration: 1.0 // Faster transition

@@ -47,6 +47,10 @@ export class HeroObject {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
   }
 
+  // Private accumulator for smooth time progression
+  private totalTime = 0;
+  private lastFrameTime = 0;
+
   update(time: number) {
     const mgr = ExperienceManager.getInstance();
 
@@ -61,15 +65,23 @@ export class HeroObject {
     this.uniforms.uColorB.value.copy(mgr.params.colorB);
     this.uniforms.uColorC.value.copy(mgr.params.colorC);
 
-    // Time logic: modulate speed based on flowSpeed
-    // We can't just pass 'time' direct if flowSpeed changes, or it jumps. 
-    // But for simplicity, we'll let the shader handle the multiply or just pass 'time' and multiply inside.
-    // Better: pass real wall time, multiply inside shader using flowSpeed.
-    this.uniforms.uTime.value = time;
+    // SMOOTH TIME LOGIC
+    // Calculate delta time
+    const delta = time - this.lastFrameTime;
+    this.lastFrameTime = time;
 
-    // Subtle base rotation
-    this.mesh.rotation.y = time * 0.05 * (1 + mgr.params.chaosLevel);
-    this.mesh.rotation.z = time * 0.02 * (1 + mgr.params.chaosLevel);
+    // Accumulate time based on current flow speed
+    // This prevents "jumps" when flowSpeed changes
+    if (delta > 0) {
+      this.totalTime += delta * mgr.params.flowSpeed;
+    }
+
+    // Pass the ACCUMULATED time to the shader
+    this.uniforms.uTime.value = this.totalTime;
+
+    // Decrease rotation speed significantly to reduce dizziness
+    this.mesh.rotation.y = this.totalTime * 0.02 * (1 + mgr.params.chaosLevel * 0.5);
+    this.mesh.rotation.z = this.totalTime * 0.01 * (1 + mgr.params.chaosLevel * 0.5);
   }
 
   onMouseMove(event: MouseEvent) {
@@ -187,8 +199,8 @@ void main() {
     vUv = uv;
     vNormal = normal;
 
-    // Time multiplier based on flow speed
-    float t = uTime * uFlowSpeed;
+    // Use accumulated time directly (already multiplied by speed in JS)
+    float t = uTime;
 
     // Base Noise (Low frequency, large shapes)
     float noise1 = snoise(position * 1.0 + t * 0.2);
@@ -197,19 +209,19 @@ void main() {
     float noise2 = snoise(position * 4.0 - t * 0.5);
 
     // Chaos influence
-    float chaosMod = 1.0 + uChaosLevel * 2.0;
+    float chaosMod = 1.0 + uChaosLevel * 1.5; // Reduced multiplier
     
     // Combine noise
     float combinedNoise = noise1 * 0.7 + noise2 * 0.3;
     
     // Add "Breathing" / Pulse effect
-    float breath = sin(uTime * 1.5) * 0.05 * (1.0 - uChaosLevel); // Breath less when chaotic
+    float breath = sin(t * 1.5) * 0.05 * (1.0 - uChaosLevel);
 
     // Calculate final displacement
     float displacement = combinedNoise * uDistortion * chaosMod + breath;
     
     // Mouse Interaction Wave
-    float dist = distance(uv, uMouse * 0.5 + 0.5); // UV is 0-1, Mouse is -1 to 1 logic
+    float dist = distance(uv, uMouse * 0.5 + 0.5); 
     float mouseWave = smoothstep(0.5, 0.0, dist) * 0.1;
     displacement += mouseWave;
 
@@ -221,12 +233,6 @@ void main() {
 
     // Pass transformed position to fragment
     vPosition = newPosition;
-    
-    // Calculate new normal (Analytic or approximate)
-    // For cheap "organic" look, we can just use the original normal or 
-    // try to perturb it effectively in fragment shader with derivatives.
-    // Here we pass the original normal but modified by noise slightly for reflection variation
-    // vNormal = normalize(normal + combinedNoise * 0.2);
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 }
