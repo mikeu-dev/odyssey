@@ -35,7 +35,7 @@
 	- Slow, emotional transitions
 -->
 <div
-	class="pointer-events-none fixed top-0 left-0 z-10 flex h-full w-full flex-col items-center justify-center p-8 text-white"
+	class="pointer-events-none fixed top-0 left-0 z-10 flex h-full w-full flex-col items-center justify-center p-8 text-white mix-blend-difference"
 >
 	<!-- Simple Grain/texture overlay could go here, but keeping it clean for now -->
 
