@@ -9,11 +9,11 @@
 </svelte:head>
 
 <div class="relative w-full bg-black text-white">
-	<div class="fixed top-0 left-0 w-full h-screen z-0">
+	<div class="fixed top-0 left-0 z-0 h-screen w-full">
 		<Scene />
 		<Overlay />
 	</div>
 
 	<!-- Scroll spacer to drive the interaction -->
-	<div class="relative z-10 w-full h-[400vh] pointer-events-none"></div>
+	<div class="pointer-events-none relative z-10 h-[1000vh] w-full"></div>
 </div>

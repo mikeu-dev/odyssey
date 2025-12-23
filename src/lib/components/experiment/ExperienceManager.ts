@@ -96,55 +96,55 @@ export class ExperienceManager {
         // Keheningan: Void, Mist, Subtle Light
         gsap.to(this.params, {
             chaosLevel: 0,
-            flowSpeed: 0.2,
-            distortion: 0.1,
+            flowSpeed: 0.2, // Very slow
+            distortion: 0.05, // Almost Sphere
             morph: 0,
             roughness: 0.6,
             duration: 2.0
         });
-        gsap.to(this.params.colorA, { r: 0.1, g: 0.1, b: 0.15, duration: 2 }); // Dark Void
-        gsap.to(this.params.colorB, { r: 0.2, g: 0.2, b: 0.3, duration: 2 }); // Deep Slate
+        gsap.to(this.params.colorA, { r: 0.05, g: 0.05, b: 0.1, duration: 2 }); // Deep Void
+        gsap.to(this.params.colorB, { r: 0.1, g: 0.1, b: 0.15, duration: 2 });
     }
 
     private transitionToEnergy() {
         // Aliran: Golden, Flowing, Purposeful
         gsap.to(this.params, {
-            chaosLevel: 0.1,
-            flowSpeed: 1.0,
-            distortion: 0.4,
-            morph: 0.3,
-            roughness: 0.3,
+            chaosLevel: 0.3,
+            flowSpeed: 1.5,
+            distortion: 0.8, // More movement
+            morph: 0.4,
+            roughness: 0.2,
             duration: 2.0
         });
-        gsap.to(this.params.colorA, { r: 0.8, g: 0.6, b: 0.2, duration: 2 }); // Gold
-        gsap.to(this.params.colorB, { r: 0.4, g: 0.2, b: 0.1, duration: 2 }); // Bronze
+        gsap.to(this.params.colorA, { r: 1.0, g: 0.8, b: 0.2, duration: 2 }); // Bright Gold
+        gsap.to(this.params.colorB, { r: 0.6, g: 0.3, b: 0.1, duration: 2 });
     }
 
     private transitionToChaos() {
         // Gejolak: Crimson, Dark, Fractured
         gsap.to(this.params, {
-            chaosLevel: 0.8,
-            flowSpeed: 2.5,
-            distortion: 1.2,
-            morph: 0.8,
-            roughness: 0.9,
+            chaosLevel: 1.5, // EXTREME CHAOS
+            flowSpeed: 4.0, // Very Fast
+            distortion: 2.5, // Spiky
+            morph: 1.0,
+            roughness: 1.0, // Rough texture
             duration: 1.5
         });
-        gsap.to(this.params.colorA, { r: 0.5, g: 0.0, b: 0.0, duration: 1.5 }); // Dark Red
-        gsap.to(this.params.colorB, { r: 0.1, g: 0.0, b: 0.0, duration: 1.5 }); // Black
+        gsap.to(this.params.colorA, { r: 0.8, g: 0.0, b: 0.0, duration: 1.5 }); // Bright Red
+        gsap.to(this.params.colorB, { r: 0.05, g: 0.0, b: 0.0, duration: 1.5 }); // Near Black
     }
 
     private transitionToHarmony() {
         // Harmoni: Pearl, Iridescent, Calm
         gsap.to(this.params, {
             chaosLevel: 0,
-            flowSpeed: 0.4,
-            distortion: 0.2,
+            flowSpeed: 0.3,
+            distortion: 0.15, // Gentle waves
             morph: 0.1,
-            roughness: 0.1,
+            roughness: 0.05, // Mirror-like
             duration: 3.0
         });
-        gsap.to(this.params.colorA, { r: 0.95, g: 0.95, b: 1.0, duration: 3 }); // White/Pearl
-        gsap.to(this.params.colorB, { r: 0.8, g: 0.8, b: 0.9, duration: 3 }); // Soft Silver
+        gsap.to(this.params.colorA, { r: 0.9, g: 0.95, b: 1.0, duration: 3 }); // Pure Pearl
+        gsap.to(this.params.colorB, { r: 0.7, g: 0.7, b: 0.8, duration: 3 }); // Silver
     }
 }
