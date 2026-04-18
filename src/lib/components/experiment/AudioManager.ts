@@ -4,26 +4,17 @@ import { experienceState } from './state.svelte';
 export class AudioManager {
     private static instance: AudioManager;
     private drones: Map<string, Tone.Player | Tone.Oscillator | Tone.Synth> = new Map();
-    private reverb: Tone.Reverb;
-    private delay: Tone.FeedbackDelay;
-    private filter: Tone.Filter;
+    private reverb!: Tone.Reverb;
+    private delay!: Tone.FeedbackDelay;
+    private filter!: Tone.Filter;
     private isInitialized = false;
 
     // Generators for generative music
-    private polySynth: Tone.PolySynth;
+    private polySynth!: Tone.PolySynth;
     private seq: Tone.Sequence | null = null;
 
     private constructor() {
-        // Effects Chain
-        this.reverb = new Tone.Reverb({ decay: 5, wet: 0.5 }).toDestination();
-        this.delay = new Tone.FeedbackDelay("8n", 0.3).connect(this.reverb);
-        this.filter = new Tone.Filter(200, "lowpass").connect(this.delay);
-
-        this.polySynth = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: "sine" },
-            envelope: { attack: 1, decay: 0.5, sustain: 0.5, release: 2 }
-        }).connect(this.filter);
-        this.polySynth.volume.value = -6;
+        // No-op to avoid early AudioContext access
     }
 
     public static getInstance(): AudioManager {
@@ -35,6 +26,18 @@ export class AudioManager {
 
     public async initialize() {
         if (this.isInitialized) return;
+        
+        // Initialize Effects Chain on user gesture
+        this.reverb = new Tone.Reverb({ decay: 5, wet: 0.5 }).toDestination();
+        this.delay = new Tone.FeedbackDelay("8n", 0.3).connect(this.reverb);
+        this.filter = new Tone.Filter(200, "lowpass").connect(this.delay);
+
+        this.polySynth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "sine" },
+            envelope: { attack: 1, decay: 0.5, sustain: 0.5, release: 2 }
+        }).connect(this.filter);
+        this.polySynth.volume.value = -6;
+
         await Tone.start();
         this.isInitialized = true;
         console.log("Audio Context Started");

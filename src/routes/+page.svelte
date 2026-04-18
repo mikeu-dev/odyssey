@@ -7,7 +7,7 @@
 	let Scene: any = $state(null);
 	let audioStarted = $state(false);
 
-	let mainElement: HTMLElement;
+	let mainElement: HTMLElement = $state() as any;
 
 	onMount(async () => {
 		const module = await import('$lib/components/experiment/Scene.svelte');
