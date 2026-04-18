@@ -40,7 +40,7 @@ export class ExperienceManager {
     // Old logic removed in favor of granular config above
 
     // GRANULAR CHAPTER CONFIGS (20 Unique States)
-    private chapterConfigs = [
+    public chapterConfigs = [
         // GENESIS (0-4): Void -> Awakening
         { params: { chaosLevel: 0, flowSpeed: 0.1, distortion: 0.05, morph: 0, roughness: 0.6 }, colorA: { r: 0.05, g: 0.05, b: 0.1 }, colorB: { r: 0, g: 0, b: 0 } },
         { params: { chaosLevel: 0, flowSpeed: 0.2, distortion: 0.1, morph: 0.1, roughness: 0.55 }, colorA: { r: 0.1, g: 0.1, b: 0.2 }, colorB: { r: 0.02, g: 0.02, b: 0.05 } },

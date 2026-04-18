@@ -7,6 +7,8 @@
 	let Scene: any = $state(null);
 	let audioStarted = $state(false);
 
+	let mainElement: HTMLElement;
+
 	onMount(async () => {
 		const module = await import('$lib/components/experiment/Scene.svelte');
 		Scene = module.default;
@@ -127,9 +129,9 @@
 	{@html `<script type="application/ld+json">${schema}</script>`}
 </svelte:head>
 
-<main class="relative w-full">
+<main bind:this={mainElement} class="relative w-full">
 	{#if Scene}
-		<Scene />
+		<Scene container={mainElement} />
 	{:else}
 		<div
 			class="fixed inset-0 z-0 flex items-center justify-center bg-[#111] font-serif text-sm tracking-widest text-white/30 uppercase"

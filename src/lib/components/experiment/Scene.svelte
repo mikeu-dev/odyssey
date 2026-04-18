@@ -7,8 +7,15 @@
 	import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 	import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
 	import { HeroObject } from './HeroObject';
 	import { ExperienceManager } from './ExperienceManager';
+	import { ScrollManager } from './ScrollManager';
+	import { CinematicModel } from './CinematicModel';
+	
+	let { container } = $props();
 
 	let canvas: HTMLCanvasElement;
 	let renderer: THREE.WebGLRenderer;
@@ -16,6 +23,7 @@
 	let scene: THREE.Scene;
 	let camera: THREE.PerspectiveCamera;
 	let hero: HeroObject;
+	let cinematicModel: CinematicModel;
 	let frameId: number;
 
 	const init = () => {
@@ -55,9 +63,23 @@
 		const outputPass = new OutputPass();
 		composer.addPass(outputPass);
 
+		// Lights
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+		scene.add(ambientLight);
+
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+		directionalLight.position.set(5, 5, 5);
+		scene.add(directionalLight);
+
 		// Objects
 		hero = new HeroObject();
 		scene.add(hero.mesh);
+
+		// Cinematic Model
+		cinematicModel = new CinematicModel(scene);
+		cinematicModel.init('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/DamagedHelmet/glTF-Binary/DamagedHelmet.glb').then(() => {
+			ScrollManager.getInstance().setCinematicModel(cinematicModel);
+		});
 
 		// Intro Animation
 		hero.mesh.scale.set(0, 0, 0);
@@ -80,6 +102,11 @@
 
 		// Start Loop
 		tick();
+
+		// Init Scroll Manager
+		if (container) {
+			ScrollManager.getInstance().init(container);
+		}
 	};
 
 	const onResize = () => {
@@ -104,23 +131,16 @@
 	let currentScroll = 0;
 
 	const onScroll = () => {
-		const scrollY = window.scrollY;
-		const maxScroll = document.body.scrollHeight - window.innerHeight;
-		// Just update target, don't trigger manager yet
-		targetScroll = Math.max(0, Math.min(1, scrollY / maxScroll));
+		// ScrollTrigger handles this now
 	};
 
 	const tick = (time: number = 0) => {
 		const elapsedTime = time * 0.001;
 
-		// Linear Interpolation for Smooth Scroll
-		// 0.05 is the damping factor (lower = smoother/slower)
-		currentScroll += (targetScroll - currentScroll) * 0.05;
-
-		// Update Manager with smooth value
-		ExperienceManager.getInstance().onScroll(currentScroll);
+		// Update Manager handled by GSAP Timeline now
 
 		if (hero) hero.update(elapsedTime);
+		if (cinematicModel) cinematicModel.update(elapsedTime);
 
 		composer.render();
 		frameId = requestAnimationFrame(tick);
@@ -141,6 +161,7 @@
 
 			if (renderer) renderer.dispose();
 			if (hero) hero.dispose();
+			if (cinematicModel) cinematicModel.dispose();
 		}
 	});
 </script>
