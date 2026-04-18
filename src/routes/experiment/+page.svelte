@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Scene from '$lib/components/experiment/Scene.svelte';
 	import Overlay from '$lib/components/experiment/Overlay.svelte';
+
+	let mainElement = $state<HTMLElement>();
 </script>
 
 <svelte:head>
@@ -9,8 +11,8 @@
 </svelte:head>
 
 <div class="relative w-full bg-black text-white">
-	<div class="fixed top-0 left-0 z-0 h-screen w-full">
-		<Scene />
+	<div bind:this={mainElement} class="fixed top-0 left-0 z-0 h-screen w-full">
+		<Scene container={mainElement} />
 		<Overlay />
 	</div>
 

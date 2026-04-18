@@ -28,7 +28,6 @@
 	// Reactive Auto-Scroll Engine
 	$effect(() => {
 		if (experienceState.isAutoScrolling) {
-			ensureAudioInitialized();
 			startLoop();
 		} else {
 			stopLoop();

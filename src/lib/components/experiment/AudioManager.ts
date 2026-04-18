@@ -1,17 +1,18 @@
-import * as Tone from 'tone';
+import type * as ToneType from 'tone';
 import { experienceState } from './state.svelte';
 
 export class AudioManager {
     private static instance: AudioManager;
-    private drones: Map<string, Tone.Player | Tone.Oscillator | Tone.Synth> = new Map();
-    private reverb!: Tone.Reverb;
-    private delay!: Tone.FeedbackDelay;
-    private filter!: Tone.Filter;
+    private Tone: typeof ToneType | null = null;
+    private drones: Map<string, ToneType.Player | ToneType.Oscillator | ToneType.Synth> = new Map();
+    private reverb!: ToneType.Reverb;
+    private delay!: ToneType.FeedbackDelay;
+    private filter!: ToneType.Filter;
     private isInitialized = false;
 
     // Generators for generative music
-    private polySynth!: Tone.PolySynth;
-    private seq: Tone.Sequence | null = null;
+    private polySynth!: ToneType.PolySynth;
+    private seq: ToneType.Sequence | null = null;
 
     private constructor() {
         // No-op to avoid early AudioContext access
@@ -27,6 +28,10 @@ export class AudioManager {
     public async initialize() {
         if (this.isInitialized) return;
         
+        // Dynamic import to prevent early AudioContext initialization
+        this.Tone = await import('tone');
+        const Tone = this.Tone;
+
         // Initialize Effects Chain on user gesture
         this.reverb = new Tone.Reverb({ decay: 5, wet: 0.5 }).toDestination();
         this.delay = new Tone.FeedbackDelay("8n", 0.3).connect(this.reverb);
@@ -45,7 +50,8 @@ export class AudioManager {
     }
 
     public toggleMute(muted: boolean) {
-        Tone.Destination.mute = muted;
+        if (!this.Tone) return;
+        this.Tone.Destination.mute = muted;
     }
 
     public updateAmbience() {
@@ -54,7 +60,7 @@ export class AudioManager {
     }
 
     public setChapterMood(chapterIndex: number) {
-        if (!this.isInitialized) return;
+        if (!this.isInitialized || !this.Tone) return;
 
         const era = Math.floor(chapterIndex / 5);
         const progressInEra = (chapterIndex % 5) / 4; // 0.0 to 1.0 within Era
@@ -94,6 +100,9 @@ export class AudioManager {
     }
 
     private playGenesis() {
+        if (!this.Tone) return;
+        const Tone = this.Tone;
+
         // Deep drone (Low C)
         this.polySynth.releaseAll();
         this.polySynth.triggerAttack(["C2", "G2"], Tone.now(), 0.1);
@@ -104,6 +113,9 @@ export class AudioManager {
     }
 
     private playEnergy() {
+        if (!this.Tone) return;
+        const Tone = this.Tone;
+
         this.polySynth.releaseAll();
         // Ascending arpeggio
         this.seq = new Tone.Sequence((time, note) => {
@@ -115,6 +127,9 @@ export class AudioManager {
     }
 
     private playChaos() {
+        if (!this.Tone) return;
+        const Tone = this.Tone;
+
         this.polySynth.releaseAll();
         // Random dissonant notes
         this.seq = new Tone.Sequence((time, note) => {
@@ -130,6 +145,9 @@ export class AudioManager {
     }
 
     private playHarmony() {
+        if (!this.Tone) return;
+        const Tone = this.Tone;
+
         this.polySynth.releaseAll();
         // Slow major chord swelling
         this.polySynth.triggerAttack(["C3", "E3", "G3", "C4"], Tone.now());

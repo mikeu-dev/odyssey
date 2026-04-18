@@ -77,7 +77,7 @@
 
 		// Cinematic Model
 		cinematicModel = new CinematicModel(scene);
-		cinematicModel.init('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/DamagedHelmet/glTF-Binary/DamagedHelmet.glb').then(() => {
+		cinematicModel.init('/models/DamagedHelmet.glb').then(() => {
 			ScrollManager.getInstance().setCinematicModel(cinematicModel);
 		});
 
